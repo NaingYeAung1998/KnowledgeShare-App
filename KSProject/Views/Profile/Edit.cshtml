@@ -1,0 +1,180 @@
+﻿@model Contributor
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Profile</h2>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="col-md-8">
+            <form method="post">
+                @Html.HiddenFor(model => model.ID, new { @id = "conId" })
+                <label>Name</label>
+                @Html.TextBoxFor(model => model.Name, new { @class = "form-control", id = "name" })
+                <br />
+                <label>Phone</label>
+                @Html.TextBoxFor(model => model.Phone, new { @class = "form-control", type = "tel", id = "phone" })
+                <br />
+                <label>Email</label>
+                @Html.TextBoxFor(model => model.Email, new { @class = "form-control", id = "email" })
+                <br />
+                <label>Address</label>
+                <div class="form-inline">
+                    <label>Latitude</label>
+                    <input type="text" class="form-control" style="width:50px;" id="lat" />
+                    <label>Longitude</label>
+                    <input type="text" class="form-control" style="width:50px;" id="lng" />
+                    @*<button id="modal-button" class="btn" type="button" data-toggle="modal" data-target="#myModal">Check</button>*@
+                </div>
+
+
+                <br />
+
+                <button type="button" class="btn btn-primary" id="btn_save" onclick="save()">Save</button>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <br />
+        <label class="upload-label-profile text-center">
+            <img id="img-holder" src="~/images/addProfile.png" width="200" height="200" />
+            <input type="file" id="photo" name="photo" class="form-control" style="display:none" />
+        </label>
+    </div>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <span class="metadata-marker" style="display: none;" data-region_tag="html-body"></span>
+                <!--The div element for the map -->
+                <div id="map" style="width:100%;"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+
+        var isPhotoChanged = false;
+
+        
+
+        //var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+        //L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+        //    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        //    maxZoom: 18,
+        //    id: 'mapbox.streets',
+        //    accessToken: 'your.mapbox.access.token'
+        //}).addTo(mymap);
+        //var marker = L.marker([51.5, -0.09]).addTo(mymap);
+
+        function initMap() {
+            $('head script').each(function () {
+                if ($(this).attr("src") =="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5t-VGe_I0ikHQmq0tDRE2r689orRMrO8&callback=initMap") {
+                    $(this).remove();
+                }
+            });
+
+            var lati = parseInt($("#lat").val());
+            var long = parseInt($("#lng").val());
+            var address = lati + ":" + long;
+            console.log(address);
+            // The location of Uluru
+            var uluru = { lat: lati, lng: long };
+            // The map, centered at Uluru
+            var map = new google.maps.Map(
+                document.getElementById('map'), { zoom: 4, center: uluru });
+            // The marker, positioned at Uluru
+            var marker = new google.maps.Marker({ position: uluru, map: map });
+        }
+
+        $("#modal-button").click(function () {
+            var script = document.createElement("script");
+            script.type = "text/javascript";
+            script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyB5t-VGe_I0ikHQmq0tDRE2r689orRMrO8&callback=initMap";
+            document.getElementsByTagName("head")[0].appendChild(script);
+        })
+
+        $('#myModal').on('shown.bs.modal', function (e) {
+
+
+        })
+
+        $("#photo").on("change", previewImages);
+
+        function previewImages() {
+
+
+            if (this.files) $.each(this.files, readAndPreview);
+
+            function readAndPreview(i, file) {
+
+                if (!/\.(jpe?g|png|gif)$/i.test(file.name)) {
+                    return alert(file.name + " is not an image");
+                } // else...
+
+                var reader = new FileReader();
+                reader.readAsDataURL(file);
+
+                $(reader).on("load", function () {
+                    $("#img-holder").attr("src", this.result);
+
+                    isPhotoChanged = true;
+                });
+
+
+
+            }
+
+        }
+
+        function save() {
+            var id = $("#conId").val();
+            var name = $("#name").val();
+            var phone = $("#phone").val();
+            var email = $("#email").val();
+            var lati = $("#lat").val();
+            var long = $("#lng").val();
+            var address = lati + ":" + long;
+            var avatar = undefined;
+
+            if (isPhotoChanged) {
+                avatar = $("#img-holder").attr("src");
+            }
+
+            const model = {
+                ID: id,
+                Name: name,
+                Phone: phone,
+                Email: email,
+                Address: address,
+                Avatar: avatar
+            }
+
+            console.log(model);
+
+            $.ajax({
+                type: "POST",
+                accepts: "application/json",
+                data: model,
+                url: "edit",
+                success: function () {
+                    location.href = "/home";
+                },
+                error: function () {
+
+                }
+            })
+        }
+    </script>
+    @*<script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5t-VGe_I0ikHQmq0tDRE2r689orRMrO8">
+    </script>*@
+}

@@ -1,0 +1,159 @@
+﻿
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create Post</h2>
+<hr />
+
+<div id="root"></div>
+
+@section Scripts{
+<script type="text/babel">
+
+    class Post extends React.Component {
+    constructor(props) {
+    super(props);
+    this.state = {
+    photos: [],
+    videos : [],
+    photoBytes : []
+    };
+
+    }
+
+    addPhoto(event) {
+
+    this.readURL(event.target.files[0]);
+
+    var photo = {link:event.target.files[0]};
+    this.state.photos.push(photo);
+    this.setState({ photos: this.state.photos });
+
+
+    }
+
+    addVideo(){
+    var url = document.getElementById("videoUrl").value;
+    var video = {ApiLink:url};
+    this.state.videos.push(video);
+    this.setState({videos:this.state.videos});
+    document.getElementById("videoUrl").value = "";
+    }
+
+    savePost(){
+    const model={
+    Title : document.getElementById("title").value,
+    Description : document.getElementById("description").value,
+    Videos : this.state.videos,
+    Photos : this.state.photoBytes
+    }
+    console.log(model);
+    $.ajax({
+    url:"Create",
+    type:"POST",
+    accepts:"application/json",
+    data:model,
+    success:function(){
+    location.href ="/home"
+    }
+
+    });
+    }
+
+    readURL(input) {
+
+    var parent = this;
+
+    var reader = new FileReader();
+    reader.readAsDataURL(input);
+    reader.onload = function (e) {
+
+    var photoState = {Link:e.target.result};
+    parent.state.photoBytes.push(photoState);
+    parent.setState({photoBytes:parent.state.photoBytes})
+
+    }
+
+    }
+
+    render() {
+    return (
+    <div className="row">
+        <div className="col-md-6">
+            <div className="row">
+                <div className="col-md-8">
+                    <label>Title</label>
+                    <input type="text" name="title" className="form-control" id="title" />
+                </div>
+            </div>
+            <br />
+            <div className="row">
+                <div className="col-md-8">
+                    <label>Description</label>
+                    <textarea id="description" name="description" className="form-control" style={{height:"15em"}}></textarea>
+                </div>
+            </div>
+        </div>
+        <div className="col-md-6">
+            <div className="row">
+
+                <div className="col-md-12">
+                    <label>Photos</label>
+                </div>
+
+                <div className="col-md-12">
+                    {
+                    this.state.photos.map((photo, i) =>
+                    <label className="upload-label-default text-center">
+                        <img src={URL.createObjectURL(photo.link)} width="100" height="100" />
+                    </label>
+                    )
+                    }
+                    <label className="upload-label text-center">
+                        <img src="/images/addPhotoIcon.png" width="100" height="100" />
+                        <input type="file" id="photo" name="photo" className="form-control" onChange={(e) =>this.addPhoto(e)} style={{display:"none"}} multiple />
+                    </label>
+                </div>
+
+
+            </div>
+            <br />
+            <div className="row">
+
+                <div className="col-md-12 col-sm-12 form-inline">
+                    <label>Videos</label><br />
+                    <input placeholder="Youtube Url" type="text" className="form-control" id="videoUrl" width="300" /> <button className="btn" onClick={() =>this.addVideo()}>+</button>
+                </div>
+
+                <div className="col-md-12">
+                    <br />
+                    {
+                    this.state.videos.map((video,i)=>
+                    <div className="col-md-4">
+                        <iframe width="150" height="140" src={video.ApiLink} frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+                    </div>
+
+                    )
+                    }
+                </div>
+            </div>
+
+            <div className="row">
+                <div className="col-md-12">
+                    <br />
+                    <input type="submit" className="btn btn-primary" value="Create" onClick={() =>this.savePost()} />
+                </div>
+            </div>
+        </div>
+    </div>
+    );
+    }
+    }
+
+    ReactDOM.render(
+    <Post />, document.getElementById('root'));
+</script>
+}
+
+

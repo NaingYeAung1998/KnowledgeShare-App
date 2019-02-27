@@ -12,6 +12,13 @@ body {
     padding-right: 15px;
 }
 
+.white-text{
+    color:white;
+}
+
+a{
+ color:black;
+}
 /* Carousel */
 .carousel-caption p {
     font-size: 20px;
@@ -27,6 +34,41 @@ body {
 #qrCode {
     margin: 15px;
 }
+
+.text-center {
+    color: #4f4f4f;
+    font-size: 16px;
+    margin-right: 6px;
+    -webkit-transition: all .3s ease 0s;
+    transition: all .3s ease 0s;
+}
+
+.upload-label {
+    width: 100px;
+    height: 100px;
+    border-style: double;
+    border-width: 1px;
+    border-color: #999;
+    border-radius: 5px;
+    line-height: 90px;
+    font-size: 10px;
+}
+
+.upload-label-profile {
+    width: 200px;
+    height: 200px;
+    
+    line-height: 90px;
+    font-size: 10px;
+}
+
+.upload-label-default {
+    width: 100px;
+    height: 100px;
+    line-height: 90px;
+    font-size: 10px;
+}
+
 
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {

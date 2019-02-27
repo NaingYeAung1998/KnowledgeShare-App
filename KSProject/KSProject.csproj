@@ -5,7 +5,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20190209153727_InitialMigrate.cs" />
+    <Compile Remove="Migrations\20190209153727_InitialMigrate.Designer.cs" />
+    <Compile Remove="Migrations\20190209154727_InitialMigration.cs" />
+    <Compile Remove="Migrations\20190209154727_InitialMigration.Designer.cs" />
+    <Compile Remove="Migrations\20190226024643_SecondMigration.cs" />
+    <Compile Remove="Migrations\20190226024643_SecondMigration.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\images\Contributors\" />
+    <Folder Include="wwwroot\images\Posts\" />
   </ItemGroup>
 
 </Project>

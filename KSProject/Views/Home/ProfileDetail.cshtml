@@ -1,0 +1,66 @@
+﻿@model Contributor
+@{
+    ViewData["Title"] = "ProfileDetail";
+
+    var add = Model.Address.Split(":");
+    var lati = add[0];
+    var lng = add[1];
+}
+<br />
+<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        <div class="row">
+            <div class="col-md-12" style="height:450px">
+                <span class="metadata-marker" style="display: none;" data-region_tag="html-body"></span>
+                <!--The div element for the map -->
+                <div id="map" style="width:100%;height:450px;"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <img width="100%" height="75%" src="~/images/Contributors/@Model.Avatar" />
+            </div>
+            <div class="col-md-7">
+                <h4> Name - @Model.Name</h4>
+                <h4> Phone - @Model.Phone</h4>
+                <h4> Email - @Model.Email</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-1">
+
+    </div>
+</div>
+@section Scripts{
+    <script>
+        var lat = @lati;
+        var lng = @lng;
+
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyB5t-VGe_I0ikHQmq0tDRE2r689orRMrO8&callback=initMap";
+        document.getElementsByTagName("head")[0].appendChild(script);
+
+        function initMap() {
+            $('head script').each(function () {
+                if ($(this).attr("src") == "https://maps.googleapis.com/maps/api/js?key=AIzaSyB5t-VGe_I0ikHQmq0tDRE2r689orRMrO8&callback=initMap") {
+                    $(this).remove();
+                }
+            });
+
+            var lati = parseInt(lat);
+            var long = parseInt(lng);
+            var address = lati + ":" + long;
+            console.log(address);
+            // The location of Uluru
+            var uluru = { lat: lati, lng: long };
+            // The map, centered at Uluru
+            var map = new google.maps.Map(
+                document.getElementById('map'), { zoom: 4, center: uluru });
+            // The marker, positioned at Uluru
+            var marker = new google.maps.Marker({ position: uluru, map: map });
+        }
+    </script>
+
+}

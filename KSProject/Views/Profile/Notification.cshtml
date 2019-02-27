@@ -1,0 +1,33 @@
+﻿@model List<Notification>
+@{
+    ViewData["Title"] = "Notification";
+}
+
+<h2>Notification</h2>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        @foreach (var noti in Model)
+        {
+            <div class="row" style="line-height:50px;">
+                <div class="col-md-12">
+                    <div class="col-md-1"><img src="~/images/Contributors/@noti.Contributor.Avatar" class="img-circle" width="50" height="50" /></div>
+                    <div class="col-md-2"><h5><b>@noti.Contributor.Name</b></h5></div>
+                    <div class="col-md-4">
+                        @if (noti.NotificationType == Notification.NotificationTypes.comment)
+                        {
+                            <h5> commented on your post</h5>
+                        }
+                    </div>
+                    <div class="col-md-5">
+                        <div style="float:right"><a href="/home/postdetail?id=@noti.Link"><i class="fa fa-eye"></i></a></div>
+                    </div>
+
+
+                </div>
+
+            </div>
+            <hr />
+        }
+    </div>
+</div>
